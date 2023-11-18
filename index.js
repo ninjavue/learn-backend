@@ -4,14 +4,10 @@ const cors = require('cors')
 const exphbs = require('express-handlebars')
 const fileUpload = require('express-fileupload')
 const app = express();
-// const http = require('http');
 const cookieParser = require('cookie-parser')
-const https = require('node:https')
 const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session)
-const server = https.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
 const mongoose = require('mongoose');
 const helmet = require('helmet')
 const compression = require('compression')
@@ -50,7 +46,7 @@ const categoryRouter = require('./router/category')
 const productRouter = require('./router/product')
 const authROuter = require('./router/auth')
 
-const keys = require('./keys/pro')
+const keys = require('./keys/dev')
 
 
 app.use(function (req, res, next) {
