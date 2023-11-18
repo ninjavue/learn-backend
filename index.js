@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const cors = require('cors')
+const exphbs = require('express-handlebars')
 const fileUpload = require('express-fileupload')
 const app = express();
 // const http = require('http');
@@ -14,11 +15,21 @@ const io = new Server(server);
 const mongoose = require('mongoose');
 const helmet = require('helmet')
 const compression = require('compression')
+const {Router} = require('express')
+const router = Router()
+
 
 app.use(express.json());
 app.use(fileUpload())
 app.use('/images',express.static('images'))
 app.use('/files',express.static('files'))
+const hbs = exphbs.create({
+    defaultLayout: 'index',
+    extname: 'hbs'
+})
+app.engine('hbs',hbs.engine)
+app.set('view engine','hbs')
+app.set('views','views')
 app.use(cors({
     origin: '*',
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
@@ -28,6 +39,7 @@ app.use(helmet())
 app.use(compression())
 
 // Import the All router
+const pageRouter = require('./router/page')
 const userRouter = require("./router/user")
 const quesRouter = require("./router/question");
 const kahootRouter = require("./router/kahoot");
@@ -38,7 +50,7 @@ const categoryRouter = require('./router/category')
 const productRouter = require('./router/product')
 const authROuter = require('./router/auth')
 
-const keys = require('./keys/pro')
+const keys = require('./keys/dev')
 
 
 app.use(function (req, res, next) {
@@ -77,7 +89,7 @@ app.use((error,req,res,next)=>{
     next()
 })
 
-
+app.use('/', pageRouter)
 app.use("/question", quesRouter);
 app.use("/kahoot", kahootRouter);
 app.use('/user', userRouter)
@@ -88,14 +100,6 @@ app.use('/category', categoryRouter)
 app.use('/product', productRouter)
 app.use('/login', authROuter)
 
-
-io.on('connection', (socket) => {
-    console.log('a user connected');
-});
-
-app.get('/', (req,res) => {
-    res.send(`<h1>Server ishga tushdi</h1>`)
-})
 
 
 // server running
