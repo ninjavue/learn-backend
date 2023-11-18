@@ -35,13 +35,13 @@ const categoryRouter = require('./router/category')
 const productRouter = require('./router/product')
 const authROuter = require('./router/auth')
 
+const keys = require('./keys/pro')
 
 // MongoDB connection
-const MONGO_URL = "mongodb+srv://umrzoq:umrzoq2002@cluster2.iugrir8.mongodb.net/?retryWrites=true&w=majority";
 
 async function dev() {
     try {
-        mongoose.connect(MONGO_URL, {
+        mongoose.connect(keys.MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
 
 // server running
 
-
-app.listen(process.env.PORT, () => {
+const PORT = process.env.PORT || 3003
+app.listen(PORT, () => {
     console.log('Server ishga tushdi');
 });
