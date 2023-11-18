@@ -47,6 +47,7 @@
     "has-symbols": "^1.0.3",
     "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
+    "https": "^1.0.0",
     "iconv-lite": "^0.4.24",
     "ignore-by-default": "^1.0.1",
     "inherits": "^2.0.4",
