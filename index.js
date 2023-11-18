@@ -35,7 +35,7 @@ const categoryRouter = require('./router/category')
 const productRouter = require('./router/product')
 const authROuter = require('./router/auth')
 
-const keys = require('./keys/pro')
+const keys = require('./keys/dev')
 
 // MongoDB connection
 
@@ -76,7 +76,7 @@ app.get('/', (req,res) => {
 
 // server running
 
-const PORT = process.env.PORT || 3003
+const PORT = process.env.PORT || 4000
 app.listen(PORT, () => {
     console.log('Server ishga tushdi');
 });
