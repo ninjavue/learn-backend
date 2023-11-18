@@ -4,7 +4,10 @@ const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const app = express();
 // const http = require('http');
+const cookieParser = require('cookie-parser')
 const https = require('node:https')
+const session = require('express-session')
+const MongoStore = require('connect-mongodb-session')(session)
 const server = https.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
@@ -35,24 +38,45 @@ const categoryRouter = require('./router/category')
 const productRouter = require('./router/product')
 const authROuter = require('./router/auth')
 
-const keys = require('./keys/pro')
+const keys = require('./keys/dev')
 
-// MongoDB connection
 
-async function dev() {
-    try {
-        mongoose.connect(keys.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        })
-        .then(() => console.log('Mongodb Connect'))
-        .catch((error) => console.log(error));
-    } catch (error) {
-        console.log(error);
-    }
-}
+app.use(function (req, res, next) {
 
-dev();
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, X-CSRF-Token');
+    // res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
+
+const store = new MongoStore({
+    collection: 'session',
+    uri: keys.MONGODB_URI
+})
+app.use(session({
+    secret: keys.SESSION_SECRET,
+    saveUninitialized:false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 10,
+        secure: false 
+    },
+    resave:true,
+    store
+}))
+
+
+app.use(cookieParser())
+
+app.use((error,req,res,next)=>{
+    const message = `This is the unexpected field -> ${error.field}`
+    console.log(message)
+    next()
+})
+
 
 app.use("/question", quesRouter);
 app.use("/kahoot", kahootRouter);
@@ -77,6 +101,16 @@ app.get('/', (req,res) => {
 // server running
 
 const PORT = process.env.PORT || 4000
-app.listen(PORT, () => {
-    console.log('Server ishga tushdi');
-});
+
+
+async function dev(){
+    try {
+        await mongoose.connect(keys.MONGODB_URI,{useNewUrlParser:true})
+        app.listen(PORT,()=>{
+            console.log(`Server is running ${PORT}`)
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+dev()
