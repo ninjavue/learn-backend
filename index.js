@@ -35,7 +35,7 @@ const categoryRouter = require('./router/category')
 const productRouter = require('./router/product')
 const authROuter = require('./router/auth')
 
-const keys = require('./keys/dev')
+const keys = require('./keys/pro')
 
 // MongoDB connection
 

@@ -118,8 +118,8 @@
     "yallist": "^4.0.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node index",
+    "dev": "nodemon index"
   },
   "keywords": [],
   "author": "",
