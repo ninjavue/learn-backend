@@ -8,6 +8,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const mongoose = require('mongoose');
+const helmet = require('helmet')
+const compression = require('compression')
 
 app.use(express.json());
 app.use(fileUpload())
@@ -18,6 +20,8 @@ app.use(cors({
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
     credentials:  true
 }))
+app.use(helmet())
+app.use(compression())
 
 // Import the All router
 const userRouter = require("./router/user")
